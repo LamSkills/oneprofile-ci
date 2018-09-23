@@ -5,11 +5,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Tweak VirtualBox configuration for GUI applications
   config.vm.provider :virtualbox do |v|
-    v.name = centos
+    v.name = 'centos'
     v.memory = 2048
     v.cpus = 2
-
-    # v.gui = true
+    v.gui = true
     # v.customize ["modifyvm", :id, "--memory", 3072]
     # v.customize ["modifyvm", :id, "--cpus", 1]
     # v.customize ["modifyvm", :id, "--vram", "128"]
@@ -29,8 +28,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     sudo yum -y install python2-dnf libselinux-python yum
     sudo yum -y install ansible
   SHELL
-
   config.vm.provision "run", type: "shell", inline: <<-SHELL
     cd /vagrant/ansible
     su -c "ansible-playbook -u vagrant playbook.yml" vagrant
   SHELL
+
+end
