@@ -1,0 +1,9 @@
+---
+
+fedora_current: 28
+
+configure_sudoers: yes
+
+apps_dir: /apps
+
+downloads: ~/.ansible-downloads/

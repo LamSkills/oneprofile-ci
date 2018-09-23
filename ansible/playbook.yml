@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  connection: local
+
+  vars_files:
+    - config.yml
+
+  pre_tasks:
+    - include_vars: "{{ item }}"
+      with_fileglob:
+        - config.yml
+      tags: ['always']
+
+  roles:
+    - role: gitlab
+
+  tasks:
+    - include: tasks/cleanup.yml
+
+  handlers:
+   - include: handlers/system.yml
+   - include: handlers/services.yml
