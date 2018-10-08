@@ -1,0 +1,12 @@
+---
+
+docker:
+  version: 18.03.1.ce
+  repo_url: "https://download.docker.com/linux/fedora/docker-ce.repo"
+  start: true
+  service-enabled: yes
+
+docker_compose:
+  install: true
+  version: "1.22.0"
+  path: /usr/local/bin/docker-compose

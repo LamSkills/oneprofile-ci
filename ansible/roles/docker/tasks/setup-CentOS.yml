@@ -1,0 +1,69 @@
+---
+
+- name: Check the version of Docker
+  shell: docker --version 2>&1
+  register: docker_current_version
+  changed_when: false
+  failed_when: false
+  ignore_errors: true
+  args:
+    warn: no
+  become: yes
+
+- debug:
+    msg: "Required version = {{ docker.version }} and current_version = {{ docker_current_version }}"
+
+- block:
+  - name: Ensure old versions of Docker along with its dependencies are not installed
+    package:
+      name: '{{ item }}'
+      state: absent
+    with_items:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-selinux
+      - docker-engine-selinux
+      - docker-engine
+    become: yes
+
+  - name: Ensure prerequisite packages are installed
+    package:
+      name: '{{ item }}'
+      state: present
+    with_items:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    become: yes
+
+  - name: Add Docker repository
+    get_url:
+      url: "https://download.docker.com/linux/centos/docker-ce.repo"
+      dest: '/etc/yum.repos.d/docker-ce.repo'
+      owner: root
+      group: root
+      mode: 0644
+    become: yes
+
+  - name: Install Docker
+    package:
+      name: docker-ce
+      state: present
+    become: yes
+
+  when: docker.version not in docker_current_version.stdout
+
+- name: Ensure prerequisite packages are installed for docker-compose
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - epel-release
+  - python-pip
+  - docker-compose
+  become: yes
