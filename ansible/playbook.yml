@@ -12,7 +12,9 @@
       tags: ['always']
 
   roles:
+    - role: docker
     - role: gitlab
+    - role: gitlab-runner
 
   tasks:
     - include: tasks/cleanup.yml
